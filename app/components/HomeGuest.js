@@ -9,7 +9,7 @@ const HomeGuest = () => {
 	async function handleSubmit(e) {
 		e.preventDefault()
 		try {
-			await Axios.post('http://localhost:8080/register', { username, email, password })
+			await Axios.post('/register', { username, email, password })
 			console.log('user was successfully created')
 		} catch (error) {
 			console.log('there was an error')
