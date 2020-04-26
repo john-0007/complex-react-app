@@ -1,19 +1,28 @@
 import React, { useState } from 'react'
 import Page from './Page'
 import Axios from 'axios'
+import { Redirect } from 'react-router-dom'
 
 const CreatePost = () => {
 	const [title, setTitle] = useState()
 	const [body, setBody] = useState()
+	const [wasSuccessful, setWasSuccessful] = useState(false)
+
 	async function handleSubmit(e) {
 		e.preventDefault()
 		try {
 			const response = await Axios.post('/create-post', { title, body, token: localStorage.getItem('complexAppToken') })
 			console.log('new post created')
+			setWasSuccessful(response.data)
 		} catch (error) {
 			console.log('there was an error')
 		}
 	}
+
+	if (wasSuccessful) {
+		return <Redirect to={`/post/${wasSuccessful}`} />
+	}
+
 	return (
 		<Page title='Create New Post'>
 			<form onSubmit={handleSubmit}>
