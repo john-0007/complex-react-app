@@ -1,6 +1,12 @@
 import React, { useEffect } from 'react'
 
 const HeaderLoggedIn = ({ setLoggedIn }) => {
+	function handleLoggedOut() {
+		localStorage.removeItem('complexAppToken')
+		localStorage.removeItem('complexAppUsername')
+		localStorage.removeItem('complexAppAvatar')
+		setLoggedIn(false)
+	}
 	return (
 		<div className='flex-row my-3 my-md-0'>
 			<a href='#' className='text-white mr-2 header-search-icon'>
@@ -16,7 +22,7 @@ const HeaderLoggedIn = ({ setLoggedIn }) => {
 			<a className='btn btn-sm btn-success mr-2' href='/create-post'>
 				Create Post
 			</a>
-			<button onClick={() => setLoggedIn(false)} className='btn btn-sm btn-secondary'>
+			<button onClick={handleLoggedOut} className='btn btn-sm btn-secondary'>
 				Sign Out
 			</button>
 		</div>
