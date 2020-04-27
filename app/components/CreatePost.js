@@ -3,9 +3,11 @@ import Page from './Page'
 import Axios from 'axios'
 import { Redirect } from 'react-router-dom'
 import DispatchContext from '../DispatchContext'
+import StateContext from '../StateContext'
 
 const CreatePost = ({ addFlashMessage }) => {
 	const appDispatch = useContext(DispatchContext)
+	const appState = useContext(StateContext)
 	const [title, setTitle] = useState()
 	const [body, setBody] = useState()
 	const [wasSuccessful, setWasSuccessful] = useState(false)
@@ -13,7 +15,7 @@ const CreatePost = ({ addFlashMessage }) => {
 	async function handleSubmit(e) {
 		e.preventDefault()
 		try {
-			const response = await Axios.post('/create-post', { title, body, token: localStorage.getItem('complexAppToken') })
+			const response = await Axios.post('/create-post', { title, body, token: appState.user.token })
 			console.log('new post created')
 			setWasSuccessful(response.data)
 		} catch (error) {
