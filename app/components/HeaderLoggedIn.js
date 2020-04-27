@@ -1,12 +1,14 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useContext } from 'react'
 import { Link } from 'react-router-dom'
+import DispatchContext from '../DispatchContext'
 
 const HeaderLoggedIn = ({ setLoggedIn }) => {
+	const appDispatch = useContext(DispatchContext)
 	function handleLoggedOut() {
 		localStorage.removeItem('complexAppToken')
 		localStorage.removeItem('complexAppUsername')
 		localStorage.removeItem('complexAppAvatar')
-		setLoggedIn(false)
+		appDispatch({ type: 'logout' })
 	}
 	return (
 		<div className='flex-row my-3 my-md-0'>
