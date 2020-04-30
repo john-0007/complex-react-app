@@ -45,9 +45,9 @@ const ViewSinglePost = () => {
 			<div className='d-flex justify-content-between'>
 				<h2>{post.title}</h2>
 				<span className='pt-2'>
-					<a href='#' data-tip='Edit' data-for='edit' className='text-primary mr-2' title='Edit'>
+					<Link to={`/post/${post._id}/edit`} data-tip='Edit' data-for='edit' className='text-primary mr-2' title='Edit'>
 						<i className='fas fa-edit'></i>
-					</a>
+					</Link>
 					<ReactTooltip id='edit' className='custom-tooltip' />{' '}
 					<a data-tip='Delete' data-for='delete' className='delete-post-button text-danger' title='Delete'>
 						<i className='fas fa-trash'></i>
@@ -55,6 +55,7 @@ const ViewSinglePost = () => {
 					<ReactTooltip id='delete' className='custom-tooltip' />
 				</span>
 			</div>
+
 			<p className='text-muted small mb-4'>
 				<Link to={`/profile/${post.author?.username}`}>
 					<img className='avatar-tiny' src={post.author?.avatar} />

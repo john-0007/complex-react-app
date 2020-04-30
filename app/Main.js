@@ -17,25 +17,31 @@ import CreatePost from './components/CreatePost'
 import ViewSinglePost from './components/ViewSinglePost'
 import FlashMessages from './components/FlashMessages'
 import Profile from './components/Profile'
+import EditPost from './components/EditPost'
 
 Axios.defaults.baseURL = 'http://localhost:8080'
+
+console.log('local', localStorage.getItem('complexAppAvatar'))
 
 function Main() {
 	const initialState = {
 		loggedIn: Boolean(localStorage.getItem('complexAppToken')),
 		flashMessages: [],
 		user: {
-			token: '',
-			username: '',
-			avatar: '',
+			token: localStorage.getItem('complexappToken'),
+			username: localStorage.getItem('complexappUsername'),
+			avatar: localStorage.getItem('complexAppAvatar'),
 		},
 	}
 
 	function ourReducer(draft, action) {
 		switch (action.type) {
 			case 'login':
+				console.count()
 				draft.loggedIn = true
-				draft.user = action.data
+				draft.user = {
+					...action.data,
+				}
 				return
 			case 'logout':
 				draft.loggedIn = false
@@ -50,9 +56,9 @@ function Main() {
 
 	useEffect(() => {
 		if (state.loggedIn) {
-			localStorage.setItem('complexAppToken', state.token)
-			localStorage.setItem('complexAppUsername', state.username)
-			localStorage.setItem('complexAppAvatar', state.avatar)
+			localStorage.setItem('complexAppToken', state.user.token)
+			localStorage.setItem('complexAppUsername', state.user.token)
+			localStorage.setItem('complexAppAvatar', state.user.token)
 		} else {
 			localStorage.removeItem('complexAppToken')
 			localStorage.removeItem('complexAppUsername')
@@ -73,10 +79,13 @@ function Main() {
 						<Route path='/profile/:username' exact>
 							<Profile />
 						</Route>
-						<Route path='/post/:id'>
+						<Route path='/post/:id' exact>
 							<ViewSinglePost />
 						</Route>
-						<Route path='/create-post' exact>
+						<Route path='/post/:id/edit' exact>
+							<EditPost />
+						</Route>
+						<Route path='/create-post'>
 							<CreatePost />
 						</Route>
 						<Route path='/about-us'>
