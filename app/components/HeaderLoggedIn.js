@@ -10,7 +10,7 @@ const HeaderLoggedIn = () => {
 	function handleLoggedOut() {
 		appDispatch({ type: 'logout' })
 	}
-
+	console.log('dfd', appState.user)
 	return (
 		<div className='flex-row my-3 my-md-0'>
 			<a href='#' className='text-white mr-2 header-search-icon'>
@@ -20,9 +20,9 @@ const HeaderLoggedIn = () => {
 				<i className='fas fa-comment'></i>
 				<span className='chat-count-badge text-white'> </span>
 			</span>
-			<a href='#' className='mr-2'>
+			<Link to={`/profile/${appState.user.username}`} className='mr-2'>
 				<img className='small-header-avatar' src={appState.user.avatar} />
-			</a>
+			</Link>
 			<Link to='/create-post' className='btn btn-sm btn-success mr-2' href='/create-post'>
 				Create Post
 			</Link>

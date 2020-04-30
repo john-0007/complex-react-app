@@ -4,6 +4,7 @@ import { BrowserRouter, Switch, Route } from 'react-router-dom'
 import { useImmerReducer } from 'use-immer'
 import StateContext from './StateContext'
 import DispatchContext from './DispatchContext'
+import Axios from 'axios'
 
 // My components
 import Header from './components/Header'
@@ -15,7 +16,7 @@ import Terms from './components/Terms'
 import CreatePost from './components/CreatePost'
 import ViewSinglePost from './components/ViewSinglePost'
 import FlashMessages from './components/FlashMessages'
-import Axios from 'axios'
+import Profile from './components/Profile'
 
 Axios.defaults.baseURL = 'http://localhost:8080'
 
@@ -68,6 +69,9 @@ function Main() {
 					<Switch>
 						<Route path='/' exact>
 							{state.loggedIn ? <Home /> : <HomeGuest />}
+						</Route>
+						<Route path='/profile/:username' exact>
+							<Profile />
 						</Route>
 						<Route path='/post/:id'>
 							<ViewSinglePost />
