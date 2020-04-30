@@ -1,7 +1,7 @@
-import React, { useEffect } from 'react'
+import React, { useEffect } from "react"
 
-const Container = ({ children, wide }) => {
-	return <div className={`container py-md-5 ${wide ? '' : 'container--narrow'}`}>{children}</div>
+function Container(props) {
+  return <div className={"container py-md-5 " + (props.wide ? "" : "container--narrow")}>{props.children}</div>
 }
 
 export default Container
