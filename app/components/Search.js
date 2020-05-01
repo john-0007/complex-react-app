@@ -3,6 +3,7 @@ import DispatchContext from '../DispatchContext'
 import Axios from 'axios'
 import { useImmer } from 'use-immer'
 import { Link } from 'react-router-dom'
+import Post from './Post'
 
 const Search = () => {
 	const appDispatch = useContext(DispatchContext)
@@ -97,19 +98,9 @@ const Search = () => {
 								<div className='list-group-item active'>
 									<strong>Search Results</strong> ({state.results.length} {state.results.length > 1 ? 'items' : 'item'} found)
 								</div>
-								{state.results.map((post) => {
-									const date = new Date(post.createdDate)
-									const dateFormatted = `${date.getMonth() + 1}/${date.getDate()}/${date.getFullYear()}`
-
-									return (
-										<Link onClick={() => appDispatch({ type: 'closeSearch' })} key={post._id} to={`/post/${post._id}`} className='list-group-item list-group-item-action'>
-											<img className='avatar-tiny' src={post.author.avatar} /> <strong>{post.title}</strong>{' '}
-											<span className='text-muted small'>
-												by {post.author.username} {dateFormatted}{' '}
-											</span>
-										</Link>
-									)
-								})}
+								{state.results.map((post) => (
+									<Post psot={post} key={post._id} onClick={() => appDispatch({ type: 'closeSearch' })} />
+								))}
 							</div>
 						)}
 						{!Boolean(state.results.length) && <p className='alert alert-danger text-center shadow-sm'>Sorry, we could not find any result for that search.</p>}
