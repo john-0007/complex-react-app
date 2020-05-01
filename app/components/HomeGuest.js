@@ -71,14 +71,38 @@ function HomeGuest() {
 				draft.email.value = action.value
 				return
 			case 'emailAfterDelay':
+				if (!/^\S+@\S+$/.test(draft.email.value)) {
+					draft.email.hasErrors = true
+					draft.email.message = 'You must provide a valid email address.'
+				}
+
+				if (!draft.email.hasErrors) {
+					draft.email.checkCount++
+				}
+
 				return
 			case 'emailUiqueResults':
+				if (action.value) {
+					draft.email.hasErrors = true
+					draft.email.isUnique = false
+					draft.email.message = 'That email is already being used.'
+				} else {
+					draft.email.isUnique = true
+				}
 				return
 			case 'passwordImmediately':
 				draft.password.hasErrors = false
 				draft.password.value = action.value
+				if (draft.password.value.length > 50) {
+					draft.password.hasErrors = true
+					draft.password.message = 'Password cannot exceed 50 characters.'
+				}
 				return
 			case 'passwordAfterDelay':
+				if (draft.password.value.length < 12) {
+					draft.password.hasErrors = true
+					draft.password.message = 'Password must be al least 12 characters.'
+				}
 				return
 			case 'submitForm':
 				return
@@ -94,6 +118,22 @@ function HomeGuest() {
 			return () => clearTimeout(delay)
 		}
 	}, [state.username.value])
+
+	useEffect(() => {
+		if (state.email.value) {
+			const delay = setTimeout(() => dispatch({ type: 'emailAfterDelay' }), 800)
+
+			return () => clearTimeout(delay)
+		}
+	}, [state.email.value])
+
+	useEffect(() => {
+		if (state.password.value) {
+			const delay = setTimeout(() => dispatch({ type: 'passwordAfterDelay' }), 800)
+
+			return () => clearTimeout(delay)
+		}
+	}, [state.password.value])
 
 	useEffect(() => {
 		if (state.username.checkCount) {
@@ -118,6 +158,30 @@ function HomeGuest() {
 			}
 		}
 	}, [state.username.checkCount])
+
+	useEffect(() => {
+		if (state.email.checkCount) {
+			const ourRequest = Axios.CancelToken.source()
+
+			async function fetchResult() {
+				try {
+					const response = await Axios.post('/doesEmailExist', { email: state.email.value }, { cancelToken: ourRequest.token })
+
+					console.log('response', response.data)
+					dispatch({
+						type: 'emailUiqueResults',
+						value: response.data,
+					})
+				} catch (e) {
+					console.log('There was a problem.')
+				}
+			}
+			fetchResult()
+			return () => {
+				ourRequest.cancel()
+			}
+		}
+	}, [state.email.checkCount])
 
 	function handleSubmit(e) {
 		e.preventDefault()
@@ -146,12 +210,18 @@ function HomeGuest() {
 								<small>Email</small>
 							</label>
 							<input onChange={(e) => dispatch({ type: 'emailImmediately', value: e.target.value })} id='email-register' name='email' className='form-control' type='text' placeholder='you@example.com' autoComplete='off' />
+							<CSSTransition in={state.email.hasErrors} timeout={330} classNames='liveValidateMessage' unmountOnExit>
+								<div className='alert alert-danger small liveValidateMessage'>{state.email.message}</div>
+							</CSSTransition>
 						</div>
 						<div className='form-group'>
 							<label htmlFor='password-register' className='text-muted mb-1'>
 								<small>Password</small>
 							</label>
 							<input onChange={(e) => dispatch({ type: 'passwordImmediately', value: e.target.value })} id='password-register' name='password' className='form-control' type='password' placeholder='Create a password' />
+							<CSSTransition in={state.password.hasErrors} timeout={330} classNames='liveValidateMessage' unmountOnExit>
+								<div className='alert alert-danger small liveValidateMessage'>{state.password.message}</div>
+							</CSSTransition>
 						</div>
 						<button type='submit' className='py-3 mt-4 btn btn-lg btn-success btn-block'>
 							Sign up for ComplexApp
